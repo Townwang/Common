@@ -1,5 +1,4 @@
-package com.townwang
-
+package com.townwang.sample
 import android.app.Application
 import android.content.Context
 import android.content.Intent
@@ -31,10 +30,6 @@ class App :  Application(){
                 //一直存活，可能调用多次
             }
         })
-
-
-
-
 
     }
 }

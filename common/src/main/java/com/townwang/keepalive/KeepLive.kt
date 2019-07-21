@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.annotation.NonNull
+import com.townwang.keepalive.KeepLive.foregroundNotification
 import com.townwang.keepalive.config.ForegroundNotification
 import com.townwang.keepalive.config.KeepLiveService
 import com.townwang.keepalive.service.JobHandlerService

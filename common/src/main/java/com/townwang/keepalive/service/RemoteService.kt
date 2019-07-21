@@ -11,7 +11,7 @@ import android.os.IBinder
 import android.os.RemoteException
 import com.townwang.keepalive.config.NotificationUtils
 import com.townwang.keepalive.receiver.NotificationClickReceiver
-import com.townwang.keeplive.GuardAidl
+import com.townwang.GuardAidl
 
 class RemoteService : Service() {
 

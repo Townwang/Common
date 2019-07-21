@@ -1,4 +1,4 @@
-package com.townwang
+package com.townwang.sample
 
 import android.app.Activity
 import android.os.Bundle

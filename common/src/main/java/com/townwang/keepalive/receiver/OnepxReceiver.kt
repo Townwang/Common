@@ -41,7 +41,7 @@ class OnepxReceiver : BroadcastReceiver() {
    private fun isForeground(context: Context): Boolean {
         val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         @Suppress("DEPRECATION") val tasks = am.getRunningTasks(1)
-        if (tasks != null && !tasks.isEmpty()) {
+        if (tasks != null && tasks.isNotEmpty()) {
             val topActivity = tasks[0].topActivity
             if (topActivity.packageName == context.packageName) {
                 return true

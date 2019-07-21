@@ -1,5 +1,5 @@
 // GuardAidl.aidl
-package com.townwang.keeplive;
+package com.townwang;
 
 // Declare any non-default types here with import statements
 

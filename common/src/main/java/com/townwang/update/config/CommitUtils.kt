@@ -145,6 +145,7 @@ object CommitUtils {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 appVersionCode = packageInfo.longVersionCode
             } else {
+                @Suppress("DEPRECATION")
                 appVersionCode = packageInfo.versionCode.toLong()
             }
         } catch (e: PackageManager.NameNotFoundException) {

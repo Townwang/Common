@@ -11,7 +11,6 @@ import androidx.core.content.FileProvider
 import com.townwang.R
 import com.townwang.update.UpdateHelper
 import com.townwang.update.config.NotificationUtils
-import com.townwang.update.config.UpdateNotificationUtils
 
 import java.io.File
 
@@ -19,6 +18,13 @@ import java.io.File
 class DownloadBroadcastManager : BroadcastReceiver() {
     private var mContext: Context? = null
     private var saveFile: File? = null
+
+
+    // 通知栏跳转Intent
+    private var updateIntent: Intent? = null
+    private var updatePendingIntent: PendingIntent? = null
+    val mIntent: Intent?
+        get() = updateIntent ?: Intent()
 
     override fun onReceive(context: Context, intent: Intent) {
         mContext = context
@@ -60,16 +66,8 @@ class DownloadBroadcastManager : BroadcastReceiver() {
             notificationUtils.sendNotification("升级", "下载完成，点击安装", installIntent)
 
         } else {
-            // 下载失败
-            UpdateNotificationUtils.getNotificationBuilder(mContext)
-                .setContentTitle(mContext!!.resources.getString(R.string.app_name))
-                .setContentText("下载失败,网络连接超时")
-                .setSmallIcon(android.R.drawable.stat_notify_error)
-                .setContentIntent(UpdateNotificationUtils.getPendingIntent(mContext))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                UpdateNotificationUtils.getNotificationManager(mContext)
-                    .notify(0, UpdateNotificationUtils.getNotificationBuilder(mContext).build())// 把通知发布出去
-            }
+            val notificationUtils = NotificationUtils(mContext!!)
+            notificationUtils.sendNotification("升级失败", "网络出现异常", updatePendingIntent ?: PendingIntent.getActivity(mContext, 0, mIntent ?: updateIntent, 0))
         }
 
     }
@@ -83,7 +81,7 @@ class DownloadBroadcastManager : BroadcastReceiver() {
         val notificationUtils = NotificationUtils(mContext!!)
         notificationUtils.sendNotificationProgress(
             mContext!!.resources.getString(R.string.app_name) + " 升级"
-            , "$rate%", rate, UpdateNotificationUtils.getPendingIntent(mContext)
+            , "$rate%", rate, updatePendingIntent ?: PendingIntent.getActivity(mContext, 0, mIntent ?: updateIntent, 0)
         )
 
     }

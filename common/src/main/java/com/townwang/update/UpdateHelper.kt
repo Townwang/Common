@@ -48,7 +48,7 @@ constructor(versionInfo: VersionInfo) {
                 mDownloadBroadcastManager = DownloadBroadcastManager()
                 localBroadcastManager.registerReceiver(mDownloadBroadcastManager, IntentFilter("status"))
                 localBroadcastManager.registerReceiver(mDownloadBroadcastManager, IntentFilter("rate"))
-                val ft = activity!!.fragmentManager.beginTransaction()
+                @Suppress("DEPRECATION") val ft = activity!!.fragmentManager.beginTransaction()
                 ft.add(DialogUpdateFragment.newInstance(versionInfo), "DialogUpdateFragment")
                 ft.commit()
             }

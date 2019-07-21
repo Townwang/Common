@@ -5,11 +5,12 @@ import android.app.Service
 import android.content.*
 import android.media.MediaPlayer
 import android.os.*
+import androidx.annotation.RequiresApi
 import com.townwang.R
 import com.townwang.keepalive.KeepLive
 import com.townwang.keepalive.config.NotificationUtils
 import com.townwang.keepalive.receiver.NotificationClickReceiver
-import com.townwang.keeplive.GuardAidl
+import com.townwang.GuardAidl
 
 class LocalService : Service() {
     private var mediaPlayer: MediaPlayer? = null
@@ -80,6 +81,7 @@ class LocalService : Service() {
 
     private val connection = object : ServiceConnection {
 
+        @RequiresApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         override fun onServiceDisconnected(name: ComponentName) {
             val remoteService = Intent(this@LocalService,
                     RemoteService::class.java)
