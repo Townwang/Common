@@ -80,5 +80,6 @@ class NotificationUtils(context: Context) : ContextWrapper(context) {
                 .setLights(0, 0, 0)
                 .setContentIntent(pendingIntent)
     }
+
 }
 

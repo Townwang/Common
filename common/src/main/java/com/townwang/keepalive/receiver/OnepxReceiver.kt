@@ -4,7 +4,7 @@ import android.app.ActivityManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.townwang.keepalive.activity.OnePixelActivity
+import com.townwang.keepalive.ui.OnePixelActivity
 
 class OnepxReceiver : BroadcastReceiver() {
 
