@@ -13,7 +13,7 @@ class MainActivity : Activity() {
 
         UpdateHelper.VersionInfo(this)
             .setUrl("https://townwang.com/town.apk")
-            .setNewVersion("1.0.1").setForce(true)
+            .setUpdateCode(1)
             .build()
 
     }

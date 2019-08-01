@@ -19,46 +19,45 @@ constructor(versionInfo: VersionInfo) {
 
     private lateinit var localBroadcastManager: LocalBroadcastManager
     private lateinit var mDownloadBroadcastManager: DownloadBroadcastManager
+
     init {
-        versionInfo. newVersion?.run {
-          val   status = CommitUtils.VersionComparison(
+        val status =  if (versionInfo.newVersion.isNullOrEmpty()){
+           if (versionInfo.newVersionCode == -1L) {
+                versionInfo.isUpdateCode
+            } else {
+                CommitUtils.VersionComparison(
+                    versionInfo.newVersionCode,
+                    versionInfo.newVersionCode,
+                    CommitUtils.getAppVersionCode(activity!!)
+                )
+            }
+        }else{
+            CommitUtils.VersionComparison(
                 versionInfo.newVersion!!,
                 versionInfo.newVersion!!,
                 CommitUtils.getVersionName(activity!! as Context)!!
             )
-            if (status > 0) { //需要更新
-                //注册广播接收器
-                localBroadcastManager = LocalBroadcastManager.getInstance(activity!!)
-                mDownloadBroadcastManager = DownloadBroadcastManager()
-                localBroadcastManager.registerReceiver(mDownloadBroadcastManager, IntentFilter("status"))
-                localBroadcastManager.registerReceiver(mDownloadBroadcastManager, IntentFilter("rate"))
-                @Suppress("DEPRECATION") val ft = activity!!.fragmentManager.beginTransaction()
-                ft.add(DialogUpdateFragment.newInstance(versionInfo), "DialogUpdateFragment")
-                ft.commit()
-            }
-        }?.run {
-           val  status = CommitUtils.VersionComparison(
-                versionInfo.newVersionCode,
-                versionInfo.newVersionCode,
-                CommitUtils.getAppVersionCode(activity!!)
-            )
-            if (status > 0) { //需要更新
-                //注册广播接收器
-                localBroadcastManager = LocalBroadcastManager.getInstance(activity!!)
-                mDownloadBroadcastManager = DownloadBroadcastManager()
-                localBroadcastManager.registerReceiver(mDownloadBroadcastManager, IntentFilter("status"))
-                localBroadcastManager.registerReceiver(mDownloadBroadcastManager, IntentFilter("rate"))
-                @Suppress("DEPRECATION") val ft = activity!!.fragmentManager.beginTransaction()
-                ft.add(DialogUpdateFragment.newInstance(versionInfo), "DialogUpdateFragment")
-                ft.commit()
-            }
+        }
+        if (status == 1){
+            versionInfo.isForce = true
+        }
+        if (status > 0) { //需要更新
+            //注册广播接收器
+            localBroadcastManager = LocalBroadcastManager.getInstance(activity!!)
+            mDownloadBroadcastManager = DownloadBroadcastManager()
+            localBroadcastManager.registerReceiver(mDownloadBroadcastManager, IntentFilter("status"))
+            localBroadcastManager.registerReceiver(mDownloadBroadcastManager, IntentFilter("rate"))
+            @Suppress("DEPRECATION") val ft = activity!!.fragmentManager.beginTransaction()
+            ft.add(DialogUpdateFragment.newInstance(versionInfo), "DialogUpdateFragment")
+            ft.commit()
         }
     }
 
-
     class VersionInfo(activitys: Activity) : Serializable {
         var newVersionCode: Long = -1L // 最新版本
-        var newVersion:String? = null // 最新版本
+        var newVersion: String? = null // 最新版本
+
+        var isUpdateCode: Int = -1 // 当前版本状态
         lateinit var url: String // 下载地址
         var isForce = false
         var titile: String = "检测到有新版本"
@@ -104,6 +103,15 @@ constructor(versionInfo: VersionInfo) {
             return this
         }
 
+
+        /**
+         * 为了适应我们公司的后台设计
+         */
+        fun setUpdateCode(isUpdateCode: Int): VersionInfo {
+            this.isUpdateCode = isUpdateCode
+            return this
+        }
+
         /**
          * 是否强制更新 默认为【false】
          *
@@ -114,8 +122,6 @@ constructor(versionInfo: VersionInfo) {
             this.isForce = isForce
             return this
         }
-
-
 
 
         /**
@@ -160,8 +166,8 @@ constructor(versionInfo: VersionInfo) {
         fun build(): UpdateHelper {
             if (this.url == "")
                 throw IllegalArgumentException("versionInfo.url == ''")
-            if (this.newVersionCode == -1L && this.newVersion ==null )
-                throw IllegalArgumentException("versionInfo.newVersionCode == '' or versionInfo.newVersion" )
+            if (this.newVersionCode == -1L && this.newVersion == null && isUpdateCode == -1)
+                throw IllegalArgumentException("versionInfo.newVersionCode == '' or versionInfo.newVersion")
             return UpdateHelper(this)
         }
     }
@@ -175,7 +181,7 @@ constructor(versionInfo: VersionInfo) {
 
     companion object {
         @SuppressLint("StaticFieldLeak")
-         var activity: Activity? = null
+        var activity: Activity? = null
 
         /**
          * 下载成功

@@ -9,7 +9,7 @@ android {
 
 
 // 项目引用的版本号
-version = "2.0.0"
+version = "2.0.1"
 
 // 定义两个链接，下面会用到。
 def siteUrl = 'https://github.com/Townwang/Common' // 项目主页。
