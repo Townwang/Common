@@ -32,12 +32,15 @@ class DialogUpdateFragment : DialogFragment() {
                 intent ?: return
                 when (intent.action) {
                     "dialog_te" -> {
-                        progress_bar.progress = intent.getIntExtra("dialog_te", 0)
+                        if (mVersionInfo.isForce) {
+                            progress_bar.progress = intent.getIntExtra("dialog_te", 0)
+                        }
                     }
                 }
             }
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //如果setCancelable()中参数为true，若点击dialog覆盖不到的activity的空白或者按返回键，则进行cancel，状态检测依次onCancel()和onDismiss()。如参数为false，则按空白处或返回键无反应。缺省为true

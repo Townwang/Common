@@ -7,8 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.core.content.FileProvider
-import com.townwang.BuildConfig
 import com.townwang.R
 import com.townwang.update.UpdateHelper
 import com.townwang.update.config.NotificationUtils
@@ -49,7 +49,7 @@ class DownloadBroadcastManager : BroadcastReceiver() {
             if (Build.VERSION.SDK_INT >= 24) {//判读版本是否在7.0以上
                 val apkUri = FileProvider.getUriForFile(
                     mContext!!,
-                    "${BuildConfig.APPLICATION_ID}.fileprovider",
+                    "${ mContext!!.applicationInfo.processName}.fileprovider",
                     saveFile!!
                 )//在AndroidManifest中的android:authorities值
                 install.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -76,9 +76,11 @@ class DownloadBroadcastManager : BroadcastReceiver() {
 
     @SuppressLint("NewApi")
     private fun setNotification(rate: Int) {
+
         val intent = Intent("dialog_te")
         intent.putExtra("dialog_te", rate)
         mContext?.sendBroadcast(intent)
+
         val notificationUtils = NotificationUtils(mContext!!)
         notificationUtils.sendNotificationProgress(
             mContext!!.resources.getString(R.string.app_name) + " 升级"
