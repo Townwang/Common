@@ -17,12 +17,11 @@ import java.io.Serializable
 class UpdateHelper @SuppressLint("NewApi")
 constructor(versionInfo: VersionInfo) {
 
-    private lateinit var localBroadcastManager: LocalBroadcastManager
-    private lateinit var mDownloadBroadcastManager: DownloadBroadcastManager
+
 
     init {
-        val status =  if (versionInfo.newVersion.isNullOrEmpty()){
-           if (versionInfo.newVersionCode == -1L) {
+        val status = if (versionInfo.newVersion.isNullOrEmpty()) {
+            if (versionInfo.newVersionCode == -1L) {
                 versionInfo.isUpdateCode
             } else {
                 CommitUtils.VersionComparison(
@@ -31,14 +30,14 @@ constructor(versionInfo: VersionInfo) {
                     CommitUtils.getAppVersionCode(activity!!)
                 )
             }
-        }else{
+        } else {
             CommitUtils.VersionComparison(
                 versionInfo.newVersion!!,
                 versionInfo.newVersion!!,
                 CommitUtils.getVersionName(activity!! as Context)!!
             )
         }
-        if (status == 1){
+        if (status == 1) {
             versionInfo.isForce = true
         }
         if (status > 0) { //需要更新
@@ -91,6 +90,12 @@ constructor(versionInfo: VersionInfo) {
             return this
         }
 
+        fun clear(): VersionInfo {
+            activity = null
+            //取消注册广播,防止内存泄漏
+            localBroadcastManager.unregisterReceiver(mDownloadBroadcastManager)
+            return this
+        }
 
         /**
          * 设置下载链接
@@ -163,6 +168,7 @@ constructor(versionInfo: VersionInfo) {
             return this
         }
 
+
         fun build(): UpdateHelper {
             if (this.url == "")
                 throw IllegalArgumentException("versionInfo.url == ''")
@@ -172,14 +178,12 @@ constructor(versionInfo: VersionInfo) {
         }
     }
 
-
-    fun clear() {
-        activity = null
-        //取消注册广播,防止内存泄漏
-        localBroadcastManager.unregisterReceiver(mDownloadBroadcastManager)
-    }
-
     companion object {
+        private lateinit var localBroadcastManager: LocalBroadcastManager
+
+        private lateinit var mDownloadBroadcastManager: DownloadBroadcastManager
+
+
         @SuppressLint("StaticFieldLeak")
         var activity: Activity? = null
 
@@ -201,6 +205,8 @@ constructor(versionInfo: VersionInfo) {
             intent.putExtra("mVersionInfo", mVersionInfo)
             activity!!.startService(intent)
         }
+
+
     }
 
 }

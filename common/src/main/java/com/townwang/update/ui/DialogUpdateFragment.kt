@@ -55,6 +55,11 @@ class DialogUpdateFragment : DialogFragment() {
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        context.unregisterReceiver(broadcastReceiver)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val attributes = dialog.window!!.attributes

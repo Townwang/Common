@@ -21,6 +21,6 @@ class MainActivity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
+        UpdateHelper.VersionInfo(this).clear()
     }
 }
